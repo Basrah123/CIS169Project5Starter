@@ -9,7 +9,11 @@ builder.Services.AddDbContext<CourseCatalogContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("CourseCatalogContext") ?? throw new InvalidOperationException("Connection string 'CourseCatalogContext' not found.")));
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
